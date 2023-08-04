@@ -1,0 +1,57 @@
+<html>
+    <body>
+        <form onsubmit="saveproduct(event)">
+            <label>Product Id: </label>
+            <input type = "number" name = "product" id = "product" required/>
+            <label>Selling Price: </label>
+            <input type= "number" name = "price" id = "price" required/>
+            <label>Product Name: </label>
+            <input type = "text" name="name" id ="name" required/>
+            <button>Add Product</button>
+        </form>
+
+        <h1>Products</h1>
+        <ul id="items"></ul>
+        <h2>Total value worth of product:  <span id="total">Rs </span> </h2>
+
+        <script>
+            const saveproduct = () => {
+                event.preventDefault();
+
+                var product = event.target.product.value;
+                var price = parseInt(event.target.price.value);
+                var name = event.target.name.value;
+                var obj = {product, price, name}
+                localStorage.setItem(name, JSON.stringify(obj))
+                showproduct(obj)
+            }
+
+            const showproduct = (obj) => {
+                var parent = document.getElementById('items');
+                var child = document.createElement('li');
+                child.textContent = obj.price + "-" + obj.name;
+
+                var dlt = document.createElement('button');
+                dlt.textContent = "Delete" ;
+                dlt.onclick = () => {
+                    var price = obj.price
+                    localStorage.removeItem(obj.name);
+                    parent.removeChild(child);
+                    
+                    var totalprice = document.getElementById('total');
+                    var currentprice = parseInt(totalprice.textContent);
+                    currentprice -= price
+                    totalprice.textContent = currentprice
+                };
+
+                parent.appendChild(child);
+                child.appendChild(dlt);
+
+                var totalprice = document.getElementById('total')
+                var currentprice = parseInt(totalprice.textContent)
+                currentprice += obj.price
+                totalprice.textContent = currentprice
+            };
+        </script>
+    </body>
+</html>
